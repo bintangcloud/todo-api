@@ -22,4 +22,12 @@ func main() {
 
 	r := gin.Default()
 
+	r.POST("/tambah-user", func(c *gin.Context) {
+		var UserBaru User
+		if err := c.ShouldBindJSON(&UserBaru); err != nil {
+			c.JSON(400, gin.H{"error": "Format JSON salah"})
+			return
+		}
+	})
+
 }
