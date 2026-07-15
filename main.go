@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	dsn := "user=postgres password=bintang444 db_name=todo_db sslmode=disable"
+	dsn := "user=postgres password=bintang444 dbname=todo_db port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Gagal membuka koneksi GORM:", err)
@@ -28,6 +28,9 @@ func main() {
 			c.JSON(400, gin.H{"error": "Format JSON salah"})
 			return
 		}
+
+		db.Create(&UserBaru)
+		c.JSON(200, gin.H{"status": "User berhasil ditambahkan"})
 	})
 
 }
