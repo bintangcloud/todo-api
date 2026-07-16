@@ -105,5 +105,12 @@ func main() {
 		c.JSON(200, gin.H{"status": "Todo berhasil diupdate!"})
 	})
 
+	r.DELETE("/todo/:id", func(c *gin.Context) {
+		id := c.Param("id")
+
+		db.Delete(&Todo{}, id)
+		c.JSON(200, gin.H{"status": "sukses menghapus todo id " + id})
+	})
+
 	r.Run(":8080")
 }
