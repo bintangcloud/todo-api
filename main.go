@@ -79,5 +79,12 @@ func main() {
 		c.JSON(200, gin.H{"status": "Todo berhasil ditambahkan"})
 	})
 
+	r.GET("/tampilkan-todo", func(c *gin.Context) {
+		var AllTodos []Todo
+
+		db.Find(&AllTodos)
+		c.JSON(200, gin.H{"data": AllTodos})
+	})
+
 	r.Run(":8080")
 }
