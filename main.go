@@ -86,5 +86,24 @@ func main() {
 		c.JSON(200, gin.H{"data": AllTodos})
 	})
 
+	r.PUT("/update-todo/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		var TodoLama Todo
+
+		if err := db.First(&TodoLama, id).Error; err != nil {
+			c.JSON(404, gin.H{"error": "Todo tidak ditemukan!"})
+			return
+		}
+
+		var TodoBaru Todo
+		if err := c.ShouldBindJSON(&TodoBaru); err != nil {
+			c.JSON(400, gin.H{"error": "Format JSON salah"})
+			return
+		}
+
+		db.Model(&TodoLama).Updates(TodoBaru)
+		c.JSON(200, gin.H{"status": "Todo berhasil diupdate!"})
+	})
+
 	r.Run(":8080")
 }
