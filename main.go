@@ -22,6 +22,7 @@ func main() {
 
 	r := gin.Default()
 
+	//Endpoint user
 	r.POST("/tambah-user", func(c *gin.Context) {
 		var UserBaru User
 		if err := c.ShouldBindJSON(&UserBaru); err != nil {
@@ -66,4 +67,17 @@ func main() {
 		c.JSON(200, gin.H{"status": "sukses menghapus user id" + id})
 	})
 
+	//Endpoint TODO
+	r.POST("/tambah-todo", func(c *gin.Context) {
+		var TodoBaru Todo
+		if err := c.ShouldBindJSON(&TodoBaru); err != nil {
+			c.JSON(400, gin.H{"error": "Format JSON salah"})
+			return
+		}
+
+		db.Create(&TodoBaru)
+		c.JSON(200, gin.H{"status": "Todo berhasil ditambahkan"})
+	})
+
+	r.Run(":8080")
 }
