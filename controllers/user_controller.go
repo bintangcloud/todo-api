@@ -8,7 +8,7 @@ import (
 
 func CreateUsers(c *gin.Context) {
 	r.POST("/users", func(c *gin.Context) {
-		var UserBaru User
+		var UserBaru models.User
 		if err := c.ShouldBindJSON(&UserBaru); err != nil {
 			c.JSON(400, gin.H{"error": "Format JSON salah"})
 			return
@@ -31,14 +31,14 @@ func GetAllUsers(c *gin.Context) {
 func UpdateUser(c *gin.Context) {
 	r.PUT("/users/:id", func(c *gin.Context) {
 		id := c.Param("id")
-		var UserLama User
+		var UserLama models.User
 
 		if err := db.First(&UserLama, id).Error; err != nil {
 			c.JSON(404, gin.H{"error": "User tidak ditemukan!"})
 			return
 		}
 
-		var UserBaru User
+		var UserBaru models.User
 		if err := c.ShouldBindJSON(&UserBaru); err != nil {
 			c.JSON(400, gin.H{"error": "Format JSON salah"})
 			return
@@ -46,5 +46,14 @@ func UpdateUser(c *gin.Context) {
 
 		db.Model(&UserLama).Updates(UserBaru)
 		c.JSON(200, gin.H{"status": "User berhasil diupdate!"})
+	})
+}
+
+func DeleteUser(c *gin.Context) {
+	r.DELETE("/users/:id", func(c *gin.Context) {
+		id := c.Param("id")
+
+		db.Delete(&models.User{}, id)
+		c.JSON(200, gin.H{"status": "sukses menghapus user id" + id})
 	})
 }
