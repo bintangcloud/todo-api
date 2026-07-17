@@ -3,13 +3,15 @@ package database
 import (
 	"fmt"
 	"log"
+	"todo-api/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func ConnectDB() {
-	var DB *gorm.DB
 
 	dsn := "user=postgres password=bintang444 dbname=todo_db port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
