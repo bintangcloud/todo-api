@@ -16,3 +16,12 @@ func CreateUsers(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "User berhasil ditambahkan"})
 	})
 }
+
+func GetAllUsers(c *gin.Context) {
+	r.GET("/users", func(c *gin.Context) {
+		var AllUsers []User
+
+		db.Find(&AllUsers)
+		c.JSON(200, gin.H{"data": AllUsers})
+	})
+}
