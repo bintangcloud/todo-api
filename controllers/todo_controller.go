@@ -42,3 +42,10 @@ func UpdateTodos(c *gin.Context) {
 	database.DB.Model(&TodoLama).Updates(TodoBaru)
 	c.JSON(200, gin.H{"status": "Todo berhasil diupdate!"})
 }
+
+func DeleteTodos(c *gin.Context) {
+	id := c.Param("id")
+
+	database.DB.Delete(&models.Todo{}, id)
+	c.JSON(200, gin.H{"status": "sukses menghapus todo id " + id})
+}
