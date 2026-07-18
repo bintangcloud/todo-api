@@ -7,7 +7,8 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine) {
-	r.POST("/users", controllers.CreateUsers)
+	r.POST("/users", controllers.RegisterUser)
+
 	r.GET("/users", controllers.GetAllUsers)
 	r.PUT("/users/:id", controllers.UpdateUser)
 	r.DELETE("/users/:id", controllers.DeleteUser)
