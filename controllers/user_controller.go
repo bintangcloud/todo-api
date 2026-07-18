@@ -7,17 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateUsers(c *gin.Context) {
-	var UserBaru models.User
-	if err := c.ShouldBindJSON(&UserBaru); err != nil {
-		c.JSON(400, gin.H{"error": "Format JSON salah"})
-		return
-	}
-
-	database.DB.Create(&UserBaru)
-	c.JSON(200, gin.H{"status": "User berhasil ditambahkan"})
-}
-
 func GetAllUsers(c *gin.Context) {
 	var AllUsers []models.User
 
