@@ -3,6 +3,7 @@ package controllers
 import (
 	"todo-api/database"
 	"todo-api/models"
+	"todo-api/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,9 +26,11 @@ func Login(c *gin.Context) {
 	var user models.User
 
 	if err := database.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
-		c.JSON(401, gin.H{
-			"error": "Email atau password salah",
-		})
-		return
+		if err := utils.CheckPassword(user.Password, req.Password); err != nil {
+			c.JSON(401, gin.H{
+				"error": "Email atau password salah",
+			})
+			return
+		}
 	}
 }
