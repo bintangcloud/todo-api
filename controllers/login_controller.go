@@ -12,7 +12,7 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func login(c *gin.Context) {
+func Login(c *gin.Context) {
 	var req LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
