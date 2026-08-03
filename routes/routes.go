@@ -2,6 +2,7 @@ package routes
 
 import (
 	"todo-api/controllers"
+	"todo-api/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,8 +16,10 @@ func SetupRoutes(r *gin.Engine) {
 	r.PUT("/users/:id", controllers.UpdateUser)
 	r.DELETE("/users/:id", controllers.DeleteUser)
 
-	r.POST("/todos", controllers.CreateTodos)
-	r.GET("/todos", controllers.GetAllTodos)
-	r.PUT("/todos/:id", controllers.UpdateTodos)
-	r.DELETE("/todos/:id", controllers.DeleteTodos)
+	authorized := r.Group("/")
+	authorized.Use(middleware.AuthMiddleware())
+	authorized.POST("/todos", controllers.CreateTodos)
+	authorized.GET("/todos", controllers.GetAllTodos)
+	authorized.PUT("/todos/:id", controllers.UpdateTodos)
+	authorized.DELETE("/todos/:id", controllers.DeleteTodos)
 }
