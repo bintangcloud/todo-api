@@ -1,13 +1,18 @@
 package utils
 
 import (
+	"os"
 	"time"
 	"todo-api/models"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var SecretKey = []byte("bintang-cakeup")
+var SecretKey []byte
+
+func LoadJWTSecret() {
+	SecretKey = []byte(os.Getenv("JWT_SECRET"))
+}
 
 func GenerateToken(user models.User) (string, error) {
 	token := jwt.NewWithClaims(
