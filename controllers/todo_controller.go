@@ -18,10 +18,15 @@ func CreateTodos(c *gin.Context) {
 }
 
 func GetAllTodos(c *gin.Context) {
-	var AllTodos []models.Todo
+	userID := c.GetUint("userID")
 
-	database.DB.Find(&AllTodos)
-	c.JSON(200, gin.H{"data": AllTodos})
+	var todos []models.Todo
+
+	database.DB.Where("user_id = ?", userID).Find(&todos)
+
+	c.JSON(200, gin.H{
+		"data": todos,
+	})
 }
 
 func UpdateTodos(c *gin.Context) {
