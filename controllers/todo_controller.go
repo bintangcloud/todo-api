@@ -46,27 +46,46 @@ func GetAllTodos(c *gin.Context) {
 }
 
 func UpdateTodos(c *gin.Context) {
+	userID := c.GetUint("userID")
+
 	id := c.Param("id")
+
 	var TodoLama models.Todo
 
-	if err := database.DB.First(&TodoLama, id).Error; err != nil {
-		c.JSON(404, gin.H{"error": "Todo tidak ditemukan!"})
+	if err := database.DB.Where(
+		"id = ? AND user_id = ?",
+		id,
+		userID,
+	).First(&TodoLama).Error; err != nil {
+
+		c.JSON(404, gin.H{
+			"error": "Todo tidak ditemukan",
+		})
 		return
 	}
 
 	var TodoBaru models.Todo
+
 	if err := c.ShouldBindJSON(&TodoBaru); err != nil {
-		c.JSON(400, gin.H{"error": "Format JSON salah"})
+		c.JSON(400, gin.H{
+			"error": "Format JSON salah",
+		})
 		return
 	}
 
-	database.DB.Model(&TodoLama).Updates(TodoBaru)
-	c.JSON(200, gin.H{"status": "Todo berhasil diupdate!"})
+	database.DB.Model(&TodoLama).Updates(map[string]interface{}{
+		"title": TodoBaru.Title,
+	})
+
+	c.JSON(200, gin.H{
+		"status": "Todo berhasil diupdate",
+	})
 }
 
 func DeleteTodos(c *gin.Context) {
+	userID := c.GetUint("userID")
 	id := c.Param("id")
 
-	database.DB.Delete(&models.Todo{}, id)
-	c.JSON(200, gin.H{"status": "sukses menghapus todo id " + id})
+	database.DB.Where("id = ? AND user_id = ?", id, userID).Delete(&models.Todo{})
+	c.JSON(200, gin.H{"status": "sukses menghapus todo"})
 }
