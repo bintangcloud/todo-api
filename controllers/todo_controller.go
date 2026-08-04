@@ -86,6 +86,18 @@ func DeleteTodos(c *gin.Context) {
 	userID := c.GetUint("userID")
 	id := c.Param("id")
 
-	database.DB.Where("id = ? AND user_id = ?", id, userID).Delete(&models.Todo{})
-	c.JSON(200, gin.H{"status": "sukses menghapus todo"})
+	result := database.DB.
+		Where("id = ? AND user_id = ?", id, userID).
+		Delete(&models.Todo{})
+
+	if result.RowsAffected == 0 {
+		c.JSON(404, gin.H{
+			"error": "Todo tidak ditemukan",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"status": "sukses menghapus todo",
+	})
 }
