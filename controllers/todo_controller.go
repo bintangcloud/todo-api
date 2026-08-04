@@ -7,7 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-userID := c.GetUint("userID")
+func CreateTodos(c *gin.Context) {
+	userID := c.GetUint("userID")
 
 	var TodoBaru models.Todo
 
@@ -30,6 +31,7 @@ userID := c.GetUint("userID")
 	c.JSON(201, gin.H{
 		"status": "Todo berhasil ditambahkan",
 	})
+}
 
 func GetAllTodos(c *gin.Context) {
 	userID := c.GetUint("userID")
