@@ -8,13 +8,24 @@ import (
 )
 
 func CreateTodos(c *gin.Context) {
+	userID := c.GetUint("userID")
+
 	var TodoBaru models.Todo
+
 	if err := c.ShouldBindJSON(&TodoBaru); err != nil {
-		c.JSON(400, gin.H{"error": "Format JSON salah"})
+		c.JSON(400, gin.H{
+			"error": "Format JSON salah",
+		})
 		return
 	}
+
+	TodoBaru.UserID = userID
+
 	database.DB.Create(&TodoBaru)
-	c.JSON(200, gin.H{"status": "Todo berhasil ditambahkan"})
+
+	c.JSON(201, gin.H{
+		"status": "Todo berhasil ditambahkan",
+	})
 }
 
 func GetAllTodos(c *gin.Context) {
