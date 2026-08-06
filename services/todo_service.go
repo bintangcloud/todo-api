@@ -13,3 +13,9 @@ func CreateTodo(todo *models.Todo, userID uint) error {
 
 	return err
 }
+
+func GetTodos(userID uint) ([]models.Todo, error) {
+
+	return repositories.GetTodos(userID)
+
+}
