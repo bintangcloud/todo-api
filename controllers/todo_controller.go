@@ -39,7 +39,13 @@ func GetAllTodos(c *gin.Context) {
 
 	var todos []models.Todo
 
-	database.DB.Where("user_id = ?", userID).Find(&todos)
+	todos, err := services.GetTodos(userID)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Gagal mengambil todo",
+		})
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"data": todos,
