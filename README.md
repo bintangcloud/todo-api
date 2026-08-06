@@ -90,7 +90,7 @@ todo-api/
 ## 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/todo-api.git
+git clone https://github.com/bintangcloud/todo-api.git
 ```
 
 Masuk ke folder project:
