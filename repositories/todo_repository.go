@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"errors"
 	"todo-api/database"
 	"todo-api/models"
 )
@@ -41,4 +42,17 @@ func UpdateTodo(todo *models.Todo) error {
 		Updates(map[string]interface{}{
 			"title": todo.Title,
 		}).Error
+}
+
+func DeleteTodo(id string, userID uint) error {
+
+	result := database.DB.
+		Where("id = ? AND user_id = ?", id, userID).
+		Delete(&models.Todo{})
+
+	if result.RowsAffected == 0 {
+		return errors.New("todo tidak ditemukan")
+	}
+
+	return result.Error
 }
