@@ -19,3 +19,16 @@ func GetTodos(userID uint) ([]models.Todo, error) {
 	return repositories.GetTodos(userID)
 
 }
+
+func UpdateTodo(id string, userID uint, title string) error {
+
+	todo, err := repositories.FindTodoByID(id, userID)
+
+	if err != nil {
+		return err
+	}
+
+	todo.Title = title
+
+	return repositories.UpdateTodo(todo)
+}
