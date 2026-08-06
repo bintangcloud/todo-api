@@ -32,3 +32,9 @@ func UpdateTodo(id string, userID uint, title string) error {
 
 	return repositories.UpdateTodo(todo)
 }
+
+func DeleteTodo(id string, userID uint) error {
+
+	return repositories.DeleteTodo(id, userID)
+
+}
