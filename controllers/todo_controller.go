@@ -57,32 +57,29 @@ func UpdateTodos(c *gin.Context) {
 
 	id := c.Param("id")
 
-	var TodoLama models.Todo
+	var body struct {
+		Title string `json:"title"`
+	}
 
-	if err := database.DB.Where(
-		"id = ? AND user_id = ?",
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(400, gin.H{
+			"error": "format salah",
+		})
+		return
+	}
+
+	err := services.UpdateTodo(
 		id,
 		userID,
-	).First(&TodoLama).Error; err != nil {
+		body.Title,
+	)
 
+	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "Todo tidak ditemukan",
 		})
 		return
 	}
-
-	var TodoBaru models.Todo
-
-	if err := c.ShouldBindJSON(&TodoBaru); err != nil {
-		c.JSON(400, gin.H{
-			"error": "Format JSON salah",
-		})
-		return
-	}
-
-	database.DB.Model(&TodoLama).Updates(map[string]interface{}{
-		"title": TodoBaru.Title,
-	})
 
 	c.JSON(200, gin.H{
 		"status": "Todo berhasil diupdate",
