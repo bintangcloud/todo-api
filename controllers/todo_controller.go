@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"todo-api/database"
 	"todo-api/models"
 	"todo-api/services"
 
@@ -88,13 +87,12 @@ func UpdateTodos(c *gin.Context) {
 
 func DeleteTodos(c *gin.Context) {
 	userID := c.GetUint("userID")
+
 	id := c.Param("id")
 
-	result := database.DB.
-		Where("id = ? AND user_id = ?", id, userID).
-		Delete(&models.Todo{})
+	err := services.DeleteTodo(id, userID)
 
-	if result.RowsAffected == 0 {
+	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "Todo tidak ditemukan",
 		})
