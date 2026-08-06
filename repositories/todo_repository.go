@@ -22,3 +22,23 @@ func GetTodos(userID uint) ([]models.Todo, error) {
 
 	return todos, err
 }
+
+func FindTodoByID(id string, userID uint) (*models.Todo, error) {
+
+	var todo models.Todo
+
+	err := database.DB.
+		Where("id = ? AND user_id = ?", id, userID).
+		First(&todo).Error
+
+	return &todo, err
+}
+
+func UpdateTodo(todo *models.Todo) error {
+
+	return database.DB.
+		Model(todo).
+		Updates(map[string]interface{}{
+			"title": todo.Title,
+		}).Error
+}
