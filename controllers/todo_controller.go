@@ -3,6 +3,7 @@ package controllers
 import (
 	"todo-api/database"
 	"todo-api/models"
+	"todo-api/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,9 +22,9 @@ func CreateTodos(c *gin.Context) {
 
 	TodoBaru.UserID = userID
 
-	if err := database.DB.Create(&TodoBaru).Error; err != nil {
+	if err := services.CreateTodo(&TodoBaru, userID); err != nil {
 		c.JSON(500, gin.H{
-			"error": "Gagal menyimpan todo",
+			"error": "Gagal membuat todo",
 		})
 		return
 	}
