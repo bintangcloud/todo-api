@@ -11,23 +11,33 @@ import (
 func RegisterUser(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(400, gin.H{"error": "Format JSON salah"})
+		utils.ErrorResponse(
+			c, 400,
+			"Format JSON salah",
+			gin.H{})
 		return
 	}
 
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Gagal mengenkripsi password"})
+		utils.ErrorResponse(
+			c, 500,
+			"Gagal mengenkripsi password",
+			gin.H{})
 		return
 	}
 
 	user.Password = hashedPassword
 
 	if err := database.DB.Create(&user).Error; err != nil {
-		c.JSON(500, gin.H{
-			"error": "Gagal menyimpan data",
-		})
+		utils.ErrorResponse(
+			c, 500,
+			"Gagal menyimpan data",
+			gin.H{})
 		return
 	}
-	c.JSON(201, gin.H{"status": "Register Berhasil"})
+	utils.SuccessResponse(
+		c, 201,
+		"Register Berhasil",
+		gin.H{})
 }
