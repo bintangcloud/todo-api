@@ -3,6 +3,7 @@ package controllers
 import (
 	"todo-api/database"
 	"todo-api/models"
+	"todo-api/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +12,10 @@ func GetAllUsers(c *gin.Context) {
 	var AllUsers []models.User
 
 	database.DB.Find(&AllUsers)
-	c.JSON(200, gin.H{"data": AllUsers})
+	utils.SuccessResponse(
+		c, 200,
+		"Data pengguna",
+		gin.H{"data": AllUsers})
 }
 
 func UpdateUser(c *gin.Context) {
@@ -19,7 +23,7 @@ func UpdateUser(c *gin.Context) {
 	var UserLama models.User
 
 	if err := database.DB.First(&UserLama, id).Error; err != nil {
-		c.JSON(404, gin.H{"error": "User tidak ditemukan!"})
+		utils.ErrorResponse(c, 404, "User tidak ditemukan!", gin.H{})
 		return
 	}
 
@@ -30,12 +34,12 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	database.DB.Model(&UserLama).Updates(UserBaru)
-	c.JSON(200, gin.H{"status": "User berhasil diupdate!"})
+	utils.SuccessResponse(c, 200, "User berhasil diupdate!", gin.H{})
 }
 
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 
 	database.DB.Delete(&models.User{}, id)
-	c.JSON(200, gin.H{"status": "sukses menghapus user id" + id})
+	utils.SuccessResponse(c, 200, "sukses menghapus user id"+id, gin.H{})
 }
