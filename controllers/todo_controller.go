@@ -3,6 +3,7 @@ package controllers
 import (
 	"todo-api/models"
 	"todo-api/services"
+	"todo-api/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,24 +14,32 @@ func CreateTodos(c *gin.Context) {
 	var TodoBaru models.Todo
 
 	if err := c.ShouldBindJSON(&TodoBaru); err != nil {
-		c.JSON(400, gin.H{
-			"error": "Format JSON salah",
-		})
-		return
+		utils.ErrorResponse(
+			c,
+			400,
+			"validation failed",
+			utils.ValidationError(err),
+		)
 	}
 
 	TodoBaru.UserID = userID
 
 	if err := services.CreateTodo(&TodoBaru, userID); err != nil {
-		c.JSON(500, gin.H{
-			"error": "Gagal membuat todo",
-		})
+		utils.ErrorResponse(
+			c,
+			500,
+			"Gagal membuat todo",
+			nil,
+		)
 		return
 	}
 
-	c.JSON(201, gin.H{
-		"status": "Todo berhasil ditambahkan",
-	})
+	utils.SuccessResponse(
+		c,
+		201,
+		"Todo berhasil ditambahkan",
+		nil,
+	)
 }
 
 func GetAllTodos(c *gin.Context) {
@@ -40,15 +49,21 @@ func GetAllTodos(c *gin.Context) {
 
 	todos, err := services.GetTodos(userID)
 	if err != nil {
-		c.JSON(500, gin.H{
-			"error": "Gagal mengambil todo",
-		})
+		utils.ErrorResponse(
+			c,
+			500,
+			"Gagal mengambil todo",
+			nil,
+		)
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"data": todos,
-	})
+	utils.SuccessResponse(
+		c,
+		200,
+		"Todo berhasil diambil",
+		todos,
+	)
 }
 
 func UpdateTodos(c *gin.Context) {
@@ -61,9 +76,12 @@ func UpdateTodos(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(400, gin.H{
-			"error": "format salah",
-		})
+		utils.ErrorResponse(
+			c,
+			400,
+			"validation failed",
+			utils.ValidationError(err),
+		)
 		return
 	}
 
@@ -74,15 +92,21 @@ func UpdateTodos(c *gin.Context) {
 	)
 
 	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "Todo tidak ditemukan",
-		})
+		utils.ErrorResponse(
+			c,
+			404,
+			"Todo tidak ditemukan",
+			nil,
+		)
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"status": "Todo berhasil diupdate",
-	})
+	utils.SuccessResponse(
+		c,
+		200,
+		"Todo berhasil diupdate",
+		nil,
+	)
 }
 
 func DeleteTodos(c *gin.Context) {
@@ -93,13 +117,19 @@ func DeleteTodos(c *gin.Context) {
 	err := services.DeleteTodo(id, userID)
 
 	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "Todo tidak ditemukan",
-		})
+		utils.ErrorResponse(
+			c,
+			404,
+			"Todo tidak ditemukan",
+			nil,
+		)
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"status": "sukses menghapus todo",
-	})
+	utils.SuccessResponse(
+		c,
+		200,
+		"Todo berhasil dihapus",
+		nil,
+	)
 }
