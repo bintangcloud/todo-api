@@ -17,9 +17,10 @@ func Login(c *gin.Context) {
 	var req LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{
-			"error": "Format JSON salah",
-		})
+		utils.ErrorResponse(
+			c, 400,
+			"Format JSON salah",
+			gin.H{})
 		return
 	}
 
@@ -27,22 +28,28 @@ func Login(c *gin.Context) {
 
 	if err := database.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
 		if err := utils.CheckPassword(user.Password, req.Password); err != nil {
-			c.JSON(401, gin.H{
-				"error": "Email atau password salah",
-			})
+			utils.ErrorResponse(
+				c, 401,
+				"Email atau password salah",
+				gin.H{})
 			return
 		}
 	}
 
 	token, err := utils.GenerateToken(user)
 	if err != nil {
-		c.JSON(500, gin.H{
-			"error": "Gagal membuat token",
-		})
+		utils.ErrorResponse(
+			c, 500,
+			"Gagal membuat token",
+			gin.H{})
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"token": token,
-	})
+	utils.SuccessResponse(
+		c, 200,
+		"Login berhasil",
+		gin.H{
+			"token": token,
+		})
+
 }
