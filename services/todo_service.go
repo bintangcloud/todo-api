@@ -9,6 +9,10 @@ func CreateTodo(todo *models.Todo, userID uint) error {
 
 	todo.UserID = userID
 
+	if todo.Status == "" {
+		todo.Status = "pending"
+	}
+
 	err := repositories.CreateTodo(todo)
 
 	return err
